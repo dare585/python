@@ -8,7 +8,7 @@ DB_CONN = None
 
 def get_db():
     """
-        Returns a database connection
+    Returns a database connection
     """
     global DB_CONN
     if DB_CONN is None:
@@ -24,8 +24,8 @@ def get_db():
 
 def init_db():
     """
-        initialize the database, i.e
-        creates the database and table from schema.sql
+    Initialize the database, i.e
+    creates the database and table from schema.sql
     """
     db = get_db()
 

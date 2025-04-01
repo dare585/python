@@ -10,8 +10,8 @@ from app.api.v1.dashboard import dashboard
 # application factory function
 def create_app(test_config=None):
     """
-        Flask application factory function,
-        create and configure the app
+    Flask application factory function,
+    create and configure the app
     """
     # create and configure the app
     app = Flask(__name__)

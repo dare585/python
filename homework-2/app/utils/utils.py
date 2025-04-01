@@ -17,7 +17,7 @@ def generate_secret_key(length=24):
 
 def generate_random_string(length: int = 8) -> str:
     """
-        Generate rundom string from lower case chars and digits, of length "length"
+    Generate rundom string from lower case chars and digits, of length "length"
     """
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
 
@@ -39,13 +39,13 @@ def convert_date(date_str: str) -> str:
 
 def has_expired(session_expiration: datetime) -> bool:
     """
-        Check if the current time has passed the expiration datetime.
+    Check if the current time has passed the expiration datetime.
 
-        Args:
-        session_expiration (datetime.datetime): The expiration date (UTC) to compare with the current time.
+    Args:
+    session_expiration (datetime.datetime): The expiration date (UTC) to compare with the current time.
 
-        Returns:
-        bool: True if the current time is greater than the expiration datetime, False otherwise.
+    Returns:
+    bool: True if the current time is greater than the expiration datetime, False otherwise.
     """
     # Get the current time (in UTC)
     current_time = datetime.utcnow()
@@ -56,8 +56,8 @@ def has_expired(session_expiration: datetime) -> bool:
 
 def get_session_expiration_as_str(session_expiration: datetime) -> str:
     """
-        get session_expiration as datetime.datetime object, utc time
-        return UTC timestamp of the form "2025-03-06T14:30:00Z"
+    get session_expiration as datetime.datetime object, utc time
+    return UTC timestamp of the form "2025-03-06T14:30:00Z"
     """
     # Format the expiration date as per the required format
     session_expiration_as_str = session_expiration.strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -67,7 +67,7 @@ def get_session_expiration_as_str(session_expiration: datetime) -> str:
 
 def delete_session_from_db() -> None:
     """
-        delete the session row from the database if exist
+    Delete the session row from the database if exist
     """
     if g.user:
         session_id = g.user['session_id']
@@ -79,7 +79,7 @@ def delete_session_from_db() -> None:
 
 def get_s3_manager():
     """
-        Get S3BucketManager of with temporary credentials of current user session
+    Get S3BucketManager with temporary credentials of current user session
     """
     s3_manager = S3BucketManager(g.user['aws_access_key_id'], \
                                  g.user['aws_secret_access_key'], \
@@ -91,9 +91,11 @@ def get_s3_manager():
 def get_temporary_aws_credentials(aws_access_key_id, aws_secret_access_key, \
                                   aws_region, session_duration=3600):
     """
-        Get temporary AWS credentials
-        Default session duration is 3600 seconds (1 hour)
-        raises ClientError in case of an AWS exception
+    Get temporary AWS credentials
+    session duration can range from 900 seconds (15 minutes), 
+    up to a maximum of 129,600 seconds (36 hours).
+    Default session duration is 3600 seconds (1 hour)
+    raises ClientError in case of an AWS exception
     """
     try:
         # Create an STS client with provided credentials

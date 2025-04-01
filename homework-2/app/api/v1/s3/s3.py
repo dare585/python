@@ -10,8 +10,8 @@ bp = Blueprint('s3', __name__, url_prefix='/api/v1/s3')
 @login_required
 def buckets():
     """
-        GET /api/v1/s3/buckets
-        List All s3 buckets
+    GET /api/v1/s3/buckets
+    List All s3 buckets
     """
     s3_manager = get_s3_manager()
     return jsonify(s3_manager.list_s3_buckets())
@@ -21,8 +21,8 @@ def buckets():
 @login_required
 def bucket_details(bucket_name):
     """
-        GET /api/v1/s3/buckets/{bucket_name}/details
-        Get a bucket name and return this bucket details
+    GET /api/v1/s3/buckets/{bucket_name}/details
+    Get a bucket name and return this bucket details
     """
     s3_manager = get_s3_manager()
     return jsonify(s3_manager.get_bucket_details(bucket_name))

@@ -7,8 +7,8 @@ class S3BucketManager:
 
     def __init__(self, aws_access_key_id:str, aws_secret_access_key: str, aws_session_token: str, region: str):
         """
-            Get temporary AWS Credentials and aws region - 
-            aws_access_key_id, aws_secret_access_key, aws_session_token and region
+        Get temporary AWS Credentials and aws region - 
+        aws_access_key_id, aws_secret_access_key, aws_session_token and region
         """
         self._s3 = boto3.resource('s3', \
                                   aws_access_key_id=aws_access_key_id, \
@@ -18,7 +18,7 @@ class S3BucketManager:
 
     def list_s3_buckets(self) -> dict:
         """
-            list All S3 buckets
+        list All S3 buckets
         """
         buckets_info = []
         for bucket in self._s3.buckets.all():
@@ -38,7 +38,7 @@ class S3BucketManager:
 
     def get_bucket_details(self, bucket_name: str) -> dict:
         """
-            Get a bucket name and return this bucket details
+        Get a bucket name and return this bucket details
         """
         bucket = self._s3.Bucket(bucket_name)
         storage_class_summary = self.get_storage_class_summary(bucket)
@@ -59,7 +59,7 @@ class S3BucketManager:
 
     def get_buckets_summary(self) -> dict:
         """
-            Return a buckets summary
+        Return a buckets summary
         """
         summary = {
             "total_buckets": self.get_buckets_count(),
@@ -73,11 +73,11 @@ class S3BucketManager:
 
     def get_bucket_region(self, bucket) -> str:
         """
-            Get s3.Bucket object and return the bucket region
-            LocationConstraint - Specifies the Region where the bucket resides
-            - Buckets in Region us-east-1 have a LocationConstraint of null.
-            - Buckets with a LocationConstraint of EU reside in eu-west-1
-            - see docs: https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLocation.html
+        Get s3.Bucket object and return the bucket region
+        LocationConstraint - Specifies the Region where the bucket resides
+        - Buckets in Region us-east-1 have a LocationConstraint of null.
+        - Buckets with a LocationConstraint of EU reside in eu-west-1
+        - see docs: https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetBucketLocation.html
         """
         bucket_region_mapping = {
             None: "us-east-1",
@@ -91,8 +91,8 @@ class S3BucketManager:
     @staticmethod
     def get_object_count(bucket) -> int:
         """
-            Get s3.Bucket 
-            Return total object count in this bucket
+        Get s3.Bucket 
+        Return total object count in this bucket
         """
         return sum(1 for _ in bucket.objects.all())
 
@@ -100,7 +100,7 @@ class S3BucketManager:
 
     def get_buckets_count(self) -> int:
         """
-            Return total S3 buckets count in the AWS account
+        Return total S3 buckets count in the AWS account
         """
         return sum(1 for _ in self._s3.buckets.all())
 
@@ -108,15 +108,15 @@ class S3BucketManager:
     @staticmethod
     def get_total_size_bytes(bucket) -> int:
         """
-            Get s3.Bucket 
-            Return total bucket size in bytes
+        Get s3.Bucket 
+        Return total bucket size in bytes
         """
         return sum(obj.size for obj in bucket.objects.all())
 
 
     def get_total_size_gb(self) -> float:
         """
-            Return total of all the buckets size in GB
+        Return total of all the buckets size in GB
         """
         total_storage_size_bytes = sum(self.get_total_size_bytes(bucket) for bucket in self._s3.buckets.all())
         return total_storage_size_bytes / (1024 * 1024 * 1024)
@@ -125,8 +125,8 @@ class S3BucketManager:
     @staticmethod
     def is_versioning_enabled(bucket) -> bool:
         """
-            Get s3.Bucket object
-            Check if versioning is enabled on this bucket
+        Get s3.Bucket object
+        Check if versioning is enabled on this bucket
         """
         return bucket.Versioning().status == 'Enabled'
 
@@ -134,20 +134,20 @@ class S3BucketManager:
     @staticmethod
     def is_public_access_blocked(bucket) -> bool:
         """ 
-            Get s3.Bucket object
-            Check if "Block all public access" settings is checked on the S3 bucket,
-            which means all the below settings are checked:
-            - Block public access to buckets and objects granted through new access control lists (ACLs)
-            - Block public access to buckets and objects granted through any access control lists (ACLs)
-            - Block public access to buckets and objects granted through new public bucket or access point policies
-            - Block public and cross-account access to buckets and objects through any public bucket or access point policies
+        Get s3.Bucket object
+        Check if "Block all public access" settings is checked on the S3 bucket,
+        which means all the below settings are checked:
+        - Block public access to buckets and objects granted through new access control lists (ACLs)
+        - Block public access to buckets and objects granted through any access control lists (ACLs)
+        - Block public access to buckets and objects granted through new public bucket or access point policies
+        - Block public and cross-account access to buckets and objects through any public bucket or access point policies
 
-            we check all the public access block configurations are set to True
-            public_access_block = bucket.meta.client.get_public_access_block(Bucket=bucket.name)
-            public_access_block["PublicAccessBlockConfiguration"]["BlockPublicAcls"]
-            public_access_block["PublicAccessBlockConfiguration"]["BlockPublicPolicy"]
-            public_access_block["PublicAccessBlockConfiguration"]["IgnorePublicAcls"]
-            public_access_block["PublicAccessBlockConfiguration"]["RestrictPublicBuckets"]
+        we check all the public access block configurations are set to True
+        public_access_block = bucket.meta.client.get_public_access_block(Bucket=bucket.name)
+        public_access_block["PublicAccessBlockConfiguration"]["BlockPublicAcls"]
+        public_access_block["PublicAccessBlockConfiguration"]["BlockPublicPolicy"]
+        public_access_block["PublicAccessBlockConfiguration"]["IgnorePublicAcls"]
+        public_access_block["PublicAccessBlockConfiguration"]["RestrictPublicBuckets"]
         """
         public_access_block = bucket.meta.client.get_public_access_block(Bucket=bucket.name)
         return all(public_access_block["PublicAccessBlockConfiguration"].values())
@@ -156,7 +156,7 @@ class S3BucketManager:
     @staticmethod 
     def get_storage_class_summary(bucket) -> dict:
         """
-            Get s3.Bucket object and return the bucket storage class summary
+        Get s3.Bucket object and return the bucket storage class summary
         """
         storage_class_summary = defaultdict(int)
         for obj in bucket.objects.all():
@@ -167,8 +167,8 @@ class S3BucketManager:
     @staticmethod
     def get_lifecycle_rules(bucket) -> list:
         """
-            Get s3.Bucket object and return the bucket lifecycle rules
-            In case no life cycle rules exist, return an empty list
+        Get s3.Bucket object and return the bucket lifecycle rules
+        In case no life cycle rules exist, return an empty list
         """
         life_cycle_config = bucket.LifecycleConfiguration()
         try:
@@ -197,7 +197,7 @@ class S3BucketManager:
     @staticmethod
     def get_encryption(bucket) -> dict:
         """
-            Get s3.Bucket object and return the bucket server side encryption configuration
+        Get s3.Bucket object and return the bucket server side encryption configuration
         """
         bucket_encryption = bucket.meta.client.get_bucket_encryption(Bucket=bucket.name)
 
@@ -217,7 +217,7 @@ class S3BucketManager:
 
     def get_total_buckets_without_encryption(self) -> int:
         """
-            Return total buckets without encryption
+        Return total buckets without encryption
         """
         return sum(1 for bucket in self._s3.buckets.all() \
                    if not (self.get_bucket_details(bucket.name)["encryption"]["enabled"]))
@@ -226,7 +226,7 @@ class S3BucketManager:
 
     def get_total_publicly_accessible_buckets(self) -> int:
         """
-            Return total buckets that are publicly accessible
+        Return total buckets that are publicly accessible
         """
         return sum(1 for bucket in self.list_s3_buckets()["buckets"] \
                    if not bucket["public_access_blocked"])

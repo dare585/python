@@ -11,8 +11,8 @@ bp = Blueprint('dashboard', __name__, url_prefix='/api/v1/dashboard')
 @login_required
 def summary():
     """
-        GET /api/v1/dashboard/summary
-        Return summary of all supported AWS services the app monitors
+    GET /api/v1/dashboard/summary
+    Return summary of all supported AWS services the app monitors
     """
     s3_manager = get_s3_manager()
     s3_summary = s3_manager.get_buckets_summary()

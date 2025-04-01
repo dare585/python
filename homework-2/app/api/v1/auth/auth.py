@@ -15,26 +15,26 @@ bp = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 @bp.post('/login')
 def login():
     """
-        POST /api/v1/auth/login
-        Request
-            {
-            "aws_access_key_id": "<aws_access_key_id>",
-            "aws_secret_access_key": "<aws_secret_access_key>",
-            "aws_region": "<aws_region>"
-            }
+    POST /api/v1/auth/login
+    Request
+        {
+        "aws_access_key_id": "<aws_access_key_id>",
+        "aws_secret_access_key": "<aws_secret_access_key>",
+        "aws_region": "<aws_region>"
+        }
 
-        Response
-            {
-                "expires_at": "2025-03-06T14:30:00Z"
-            }
+    Response
+        {
+            "expires_at": "2025-03-06T14:30:00Z"
+        }
 
-        get user AWS credentials and obtain AWS temporary credentials using STS
+    get user AWS credentials and obtain AWS temporary credentials using STS
 
-        In case user send /login api with a session cookie already set, 
-        then if session_id exist in the DB, then we delete this user row from DB
-        and in any case we cleare the session, 
-        and obtain new temporary AWS credentials and send a new session
-        in the response
+    In case user send /login api with a session cookie already set, 
+    then if session_id exist in the DB, then we delete this user row from DB
+    and in any case we cleare the session, 
+    and obtain new temporary AWS credentials and send a new session
+    in the response
     """
     data = AuthRequestModel(**request.json) # pydantic validation
     aws_access_key_id = data.aws_access_key_id
@@ -93,10 +93,10 @@ def handle_validation_error(error: ValidationError):
 @bp.before_app_request
 def load_logged_in_user():
     """
-       checks if a session_id is stored in the session object,
-       and gets that session data from the database, 
-       storing it on g.user, which lasts for the length of the request. 
-       If there is no session_id, or if the session_id doesn’t exist, g.user will be None.
+    checks if a session_id is stored in the session object,
+    and gets that session data from the database, 
+    storing it on g.user, which lasts for the length of the request. 
+    If there is no session_id, or if the session_id doesn’t exist, g.user will be None.
     """
     session_id = session.get('session_id')
 
@@ -112,12 +112,12 @@ def load_logged_in_user():
 
 def login_required(view):
     """
-        This decorator returns a new view function 
-        that wraps the original view it’s applied to. 
-        The new function checks if a user is loaded and that this user 
-        credential did not expired, 
-        if so the original view is called and continues normally,
-        else return 401 Unauthorized response
+    This decorator returns a new view function 
+    that wraps the original view it’s applied to. 
+    The new function checks if a user is loaded and that this user 
+    credential did not expired, 
+    if so the original view is called and continues normally,
+    else return 401 Unauthorized response
     """
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -136,4 +136,4 @@ def login_required(view):
 
 
 # ToDo - 
-# Implement Periodic Task for Deleting Expired Rows
+# Implement Periodic Task for Deleting Expired session Rows from DB
